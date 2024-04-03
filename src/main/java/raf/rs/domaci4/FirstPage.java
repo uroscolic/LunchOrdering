@@ -23,6 +23,7 @@ public class FirstPage extends HttpServlet {
     public void init() {
 
         System.out.println("init method");
+        new File("fajl.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\monday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\tuesday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\wednesday.txt");
@@ -97,10 +98,12 @@ public class FirstPage extends HttpServlet {
         if(!ordersForUser.containsKey(sessionId)) {
             ordersForUser.put(sessionId, new ArrayList<>());
             List<String> orders = ordersForUser.get(sessionId);
-            for (String day : days) {
-                String order = request.getParameter(day);
-                orders.add(order);
-                weeklyOrders.get(day).put(order, weeklyOrders.get(day).get(order) + 1);
+            synchronized (this) {
+                for (String day : days) {
+                    String order = request.getParameter(day);
+                    orders.add(order);
+                    weeklyOrders.get(day).put(order, weeklyOrders.get(day).get(order) + 1);
+                }
             }
 //            int i = 0;
 //            for(Map<String, Integer> dailyOrders : weeklyOrders.values()) {
