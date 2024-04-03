@@ -2,10 +2,7 @@ package raf.rs.domaci4;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -16,25 +13,23 @@ public class FirstPage extends HttpServlet {
 
     private List<String> menu = new ArrayList<>();
     public static String password;
-    public static Map<String, Map<String, Integer>> weeklyOrders = new HashMap<>();
-    public static Map<String, List<String>> ordersForUser = new HashMap<>();
+    public static Map<String, Map<String, Integer>> weeklyOrders = new LinkedHashMap<>();
+    public static Map<String, List<String>> ordersForUser = new LinkedHashMap<>();
     private String[] days;
 
     public void init() {
 
-        System.out.println("init method");
-        new File("fajl.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\monday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\tuesday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\wednesday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\thursday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\friday.txt");
         readFromFile("C:\\Users\\User\\Desktop\\fakultet\\wp\\Domaci4\\src\\main\\resources\\password.txt");
-        weeklyOrders.put("Monday", new HashMap<>());
-        weeklyOrders.put("Tuesday", new HashMap<>());
-        weeklyOrders.put("Wednesday", new HashMap<>());
-        weeklyOrders.put("Thursday", new HashMap<>());
-        weeklyOrders.put("Friday", new HashMap<>());
+        weeklyOrders.put("Monday", new LinkedHashMap<>());
+        weeklyOrders.put("Tuesday", new LinkedHashMap<>());
+        weeklyOrders.put("Wednesday", new LinkedHashMap<>());
+        weeklyOrders.put("Thursday", new LinkedHashMap<>());
+        weeklyOrders.put("Friday", new LinkedHashMap<>());
         days = new String[]{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
         int i = 0;
         for(String item : menu) {
@@ -61,7 +56,6 @@ public class FirstPage extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String sessionId = request.getSession().getId();
-        System.out.println("Session id: " + sessionId);
         PrintWriter out = response.getWriter();
         if(!ordersForUser.containsKey(sessionId)) {
             StringBuilder outString = new StringBuilder("<html> <body> <h1>Choose your lunch</h1> <form method=\"POST\" action=\"/home\">");
@@ -94,7 +88,6 @@ public class FirstPage extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String sessionId = request.getSession().getId();
-        System.out.println("Session id: " + sessionId);
         if(!ordersForUser.containsKey(sessionId)) {
             ordersForUser.put(sessionId, new ArrayList<>());
             List<String> orders = ordersForUser.get(sessionId);
@@ -120,8 +113,5 @@ public class FirstPage extends HttpServlet {
         response.sendRedirect("/home");
     }
 
-    public void destroy() {
-        System.out.println("destroy method");
-    }
 }
 

@@ -39,6 +39,7 @@ public class AdminServlet extends HttpServlet {
                 out.println(entry.getKey() + " : " + entry.getValue() + "<br>");
             i++;
         }
+
         out.println("<form method=\"POST\" action = \"odabrana-jela\"><input type=\"submit\" name=\"submit\" value=\"CLEAR\"/>");
         out.println("</body></html>");
 
