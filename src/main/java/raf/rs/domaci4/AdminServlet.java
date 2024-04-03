@@ -17,10 +17,6 @@ public class AdminServlet extends HttpServlet {
     private String password;
     private String[] days = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
 
-    public void init() {
-        weeklyOrders = FirstPage.weeklyOrders;
-        ordersForUser = FirstPage.ordersForUser;
-    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -29,6 +25,8 @@ public class AdminServlet extends HttpServlet {
             response.sendRedirect("home");
             return;
         }
+        weeklyOrders = FirstPage.weeklyOrders;
+        ordersForUser = FirstPage.ordersForUser;
         int i = 0;
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
@@ -49,10 +47,11 @@ public class AdminServlet extends HttpServlet {
             response.sendRedirect("home");
             return;
         }
+        synchronized (this) {
         ordersForUser.clear();
-        for(Map<String, Integer> dailyOrders : weeklyOrders.values())
-            dailyOrders.replaceAll((k, v) -> 0);
-
+            for (Map<String, Integer> dailyOrders : weeklyOrders.values())
+                dailyOrders.replaceAll((k, v) -> 0);
+        }
         response.sendRedirect("odabrana-jela?password=" + password);
     }
 
